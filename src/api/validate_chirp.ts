@@ -1,5 +1,6 @@
 import { respondWithJSON } from "./json.js";
 import type { Request, Response} from "express";
+import { BadRequestError } from "./errorClasses.js"
 
 type Chirp = {
   body: String;
@@ -10,9 +11,7 @@ export async function hanlderValidate(req: Request, res: Response) {
   const maxChirpLength = 140;
 
   if (parsedBody.body.length > maxChirpLength) {
-    throw new Error("Chirp is too long");
-    //respondWithError(res, 400, "Chirp is too long");
-    //return;
+    throw new BadRequestError(`Chirp is too long. Max length is ${maxChirpLength}`);
   }
   const cleanedBody = cleanMessages(parsedBody.body)
   respondWithJSON(res, 200, {cleanedBody: cleanedBody});

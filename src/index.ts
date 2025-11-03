@@ -2,8 +2,7 @@ import express from "express";
 
 import { handlerMetrics, handlerReadiness, handlerRerouteHome, handlerReset } from "./api/handlers.js";
 import { hanlderValidate } from "./api/validate_chirp.js"
-import { errorHandler } from "./api/errorHandler.js";
-import { middlewareLogResponse, middlewareMetricsInc } from "./api/middleware.js";
+import { middlewareLogResponse, middlewareMetricsInc, middlewareErrorHandler } from "./api/middleware.js";
 
 
 const app = express();
@@ -33,7 +32,7 @@ app.post("/api/validate_chirp", (req, res, next) => {
   Promise.resolve(hanlderValidate(req,res)).catch(next);
 });
 
-app.use(errorHandler);
+app.use(middlewareErrorHandler);
 
 app.listen(PORT, () => {
   console.log(`Server is running at http://localhost:${PORT}`);
