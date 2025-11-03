@@ -6,23 +6,12 @@ type Chirp = {
 }
 
 export async function hanlderValidate(req: Request, res: Response) {
-  let body = "";
-  
-  req.on("data", (chunk) => {
-    body += chunk;
-  });
-  let parsedBody:Chirp
-  req.on("end", () => {
-    try {
-      parsedBody = JSON.parse(body);
-    } catch(error){
-      respondWithError(res, 500, "Something went wrong");
-      return;
-    }
-    if (parsedBody.body.length > 140) {
-      respondWithError(res, 400, "Chirp is too long");
-      return;
-    }
-    respondWithJSON(res, 200, {valid: true})
-  });
+  const parsedBody:Chirp = req.body;
+  const maxChirpLength = 140;
+
+  if (parsedBody.body.length > maxChirpLength) {
+    respondWithError(res, 400, "Chirp is too long");
+    return;
+  }
+  respondWithJSON(res, 200, {valid: true});
 }
