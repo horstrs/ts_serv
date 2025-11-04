@@ -3,7 +3,7 @@ import express from "express";
 import { handlerMetrics, handlerReadiness, handlerRerouteHome, handlerReset } from "./api/handlers.js";
 import { hanlderUsersCreate } from "./api/createUser.js"
 import { middlewareLogResponse, middlewareMetricsInc, middlewareErrorHandler } from "./api/middleware.js";
-import { handlerChirpsCreate, handlerGetAllChirps } from "./api/postChirp.js";
+import { handlerChirpsCreate, handlerGetAllChirps, handlerGetChirps } from "./api/chirps.js";
 
 const app = express();
 const PORT = 8080;
@@ -18,6 +18,10 @@ app.get("/api/healthz", (req, res, next) => {
 
 app.get("/api/chirps", (req, res, next) => {
   Promise.resolve(handlerGetAllChirps(req, res)).catch(next);
+});
+
+app.get("/api/chirps/:chirpID", (req, res, next) => {
+  Promise.resolve(handlerGetChirps(req, res)).catch(next);
 });
 
 app.get("/admin/metrics", (req, res, next) => {
