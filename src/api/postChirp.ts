@@ -2,14 +2,14 @@ import { respondWithJSON } from "./json.js";
 import type { Request, Response } from "express";
 import { BadRequestError } from "./errorClasses.js"
 import { NewChirp } from "../db/schema.js";
-import { postChirp } from "../db/queries/chirp.js";
+import { postChirp, getAllChirps } from "../db/queries/chirp.js";
 
 type Chirp = {
   body: string;
   userId: string;
 }
 
-export async function handlerPostChirp(req: Request, res: Response) {
+export async function handlerChirpsCreate(req: Request, res: Response) {
   const parsedBody: Chirp = req.body;
   const validatedChirp = validateChirp(parsedBody.body);
 
@@ -48,4 +48,9 @@ function cleanMessages(message: string): string {
     }
   }
   return cleanedMessage
+}
+
+export async function handlerGetAllChirps(_: Request, res: Response) {
+  const result = await getAllChirps();
+  respondWithJSON(res, 200, result);
 }

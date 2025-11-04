@@ -8,7 +8,7 @@ type UserReq = {
   email: string;
 }
 
-export async function hanlderCreateUser(req: Request, res: Response) {
+export async function hanlderUsersCreate(req: Request, res: Response) {
   const parsedBody:UserReq = req.body;
   if (!parsedBody.email) {
     throw new BadRequestError("Missing required fields");

@@ -1,10 +1,9 @@
 import express from "express";
 
 import { handlerMetrics, handlerReadiness, handlerRerouteHome, handlerReset } from "./api/handlers.js";
-import { hanlderCreateUser } from "./api/createUser.js"
+import { hanlderUsersCreate } from "./api/createUser.js"
 import { middlewareLogResponse, middlewareMetricsInc, middlewareErrorHandler } from "./api/middleware.js";
-import { handlerPostChirp } from "./api/postChirp.js";
-
+import { handlerChirpsCreate, handlerGetAllChirps } from "./api/postChirp.js";
 
 const app = express();
 const PORT = 8080;
@@ -14,27 +13,31 @@ app.use(middlewareLogResponse);
 app.use("/app", middlewareMetricsInc, express.static("./src/app"));
 
 app.get("/api/healthz", (req, res, next) => {
-  Promise.resolve(handlerReadiness(req,res)).catch(next);
+  Promise.resolve(handlerReadiness(req, res)).catch(next);
+});
+
+app.get("/api/chirps", (req, res, next) => {
+  Promise.resolve(handlerGetAllChirps(req, res)).catch(next);
 });
 
 app.get("/admin/metrics", (req, res, next) => {
-   Promise.resolve(handlerMetrics(req,res)).catch(next);
-  });
+  Promise.resolve(handlerMetrics(req, res)).catch(next);
+});
 
 app.get("/", (req, res, next) => {
-  Promise.resolve(handlerRerouteHome(req,res)).catch(next);
+  Promise.resolve(handlerRerouteHome(req, res)).catch(next);
 });
 
 app.post("/admin/reset", (req, res, next) => {
-  Promise.resolve(handlerReset(req,res)).catch(next);
+  Promise.resolve(handlerReset(req, res)).catch(next);
 });
 
 app.post("/api/chirps", (req, res, next) => {
-  Promise.resolve(handlerPostChirp(req,res)).catch(next);
+  Promise.resolve(handlerChirpsCreate(req, res)).catch(next);
 });
 
 app.post("/api/users", (req, res, next) => {
-  Promise.resolve(hanlderCreateUser(req,res)).catch(next);
+  Promise.resolve(hanlderUsersCreate(req, res)).catch(next);
 });
 
 app.use(middlewareErrorHandler);
