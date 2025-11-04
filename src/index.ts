@@ -2,6 +2,7 @@ import express from "express";
 
 import { handlerMetrics, handlerReadiness, handlerRerouteHome, handlerReset } from "./api/handlers.js";
 import { hanlderValidate } from "./api/validate_chirp.js"
+import { hanlderCreateUser } from "./api/createUser.js"
 import { middlewareLogResponse, middlewareMetricsInc, middlewareErrorHandler } from "./api/middleware.js";
 
 
@@ -30,6 +31,10 @@ app.post("/admin/reset", (req, res, next) => {
 
 app.post("/api/validate_chirp", (req, res, next) => {
   Promise.resolve(hanlderValidate(req,res)).catch(next);
+});
+
+app.post("/api/users", (req, res, next) => {
+  Promise.resolve(hanlderCreateUser(req,res)).catch(next);
 });
 
 app.use(middlewareErrorHandler);

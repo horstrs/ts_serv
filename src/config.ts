@@ -3,6 +3,7 @@ import type { MigrationConfig } from "drizzle-orm/migrator";
 type APIConfig = {
   fileserverHits: number;
   db: DBConfig;
+  platform: string;
 };
 type DBConfig = {
   url: string;
@@ -29,4 +30,5 @@ const dbConfig: DBConfig = {
 export const config: APIConfig = {
   fileserverHits: 0,
   db: dbConfig,
+  platform: envOrThrow("PLATFORM"),
 };
