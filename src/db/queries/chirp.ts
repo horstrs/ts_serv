@@ -5,11 +5,6 @@ export async function postChirp(chirp: NewChirp) {
   const [result] = await db
     .insert(chirps)
     .values(chirp)
-    .onConflictDoNothing()
     .returning();
   return result;
-}
-
-export async function resetChirps() {
-  await db.delete(chirps);
 }

@@ -1,5 +1,5 @@
 import { respondWithJSON } from "./json.js";
-import type { Request, Response} from "express";
+import type { Request, Response } from "express";
 import { BadRequestError } from "./errorClasses.js"
 import { NewChirp } from "../db/schema.js";
 import { postChirp } from "../db/queries/chirp.js";
@@ -9,16 +9,14 @@ type Chirp = {
   userId: string;
 }
 
-export async function handlerPostChirp(req:Request, res: Response) {
-  const parsedBody:Chirp = req.body;
+export async function handlerPostChirp(req: Request, res: Response) {
+  const parsedBody: Chirp = req.body;
   const validatedChirp = validateChirp(parsedBody.body);
 
-  const newChirp:NewChirp = {
+  const newChirp: NewChirp = {
     body: validatedChirp,
-    userId:parsedBody.userId
+    userId: parsedBody.userId
   }
-  console.log(newChirp.body);
-  console.log(newChirp.userId);
 
   const result = await postChirp(newChirp);
   if (!result) {
@@ -28,7 +26,7 @@ export async function handlerPostChirp(req:Request, res: Response) {
 }
 
 function validateChirp(chirp: string): string {
-  if(chirp.length === 0){
+  if (chirp.length === 0) {
     throw new BadRequestError("Chirp can't be blank");
   }
 
@@ -43,7 +41,7 @@ function cleanMessages(message: string): string {
   const improperWords = ["kerfuffle", "sharbert", "fornax"];
   let cleanedMessage = message;
   const inputArray = message.split(" ");
-  for (const word of inputArray){
+  for (const word of inputArray) {
     if (improperWords.includes(word.toLowerCase())) {
       const split = cleanedMessage.split(word);
       cleanedMessage = split.join("****");
