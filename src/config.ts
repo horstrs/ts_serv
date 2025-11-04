@@ -23,13 +23,12 @@ function envOrThrow(key: string) {
   if (!value) {
     throw new Error(`Environment variable ${key} is not set`);
   }
-  return value;;
+  return value;
 }
 
 const migrationConfig: MigrationConfig = {
   migrationsFolder: "./src/db/migrations",
 };
-
 
 export const config: Config = {
   api: {

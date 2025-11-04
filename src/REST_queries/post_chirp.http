@@ -1,0 +1,7 @@
+POST http://localhost:8080/api/chirps
+content-type: application/json
+
+{
+    "body": "Test Chir121233123p",
+    "userId": "984c0070-c9ad-4ad4-bbc8-0836c04713f1"
+}

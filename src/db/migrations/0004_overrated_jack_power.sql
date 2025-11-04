@@ -1,0 +1,1 @@
+ALTER TABLE "chirps" DROP CONSTRAINT "chirps_body_unique";

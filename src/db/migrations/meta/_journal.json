@@ -8,6 +8,34 @@
       "when": 1762200803977,
       "tag": "0000_jittery_mandroid",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1762276494933,
+      "tag": "0001_loud_toxin",
+      "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1762277851070,
+      "tag": "0002_magical_longshot",
+      "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "7",
+      "when": 1762277979021,
+      "tag": "0003_pink_mac_gargan",
+      "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "7",
+      "when": 1762278589553,
+      "tag": "0004_overrated_jack_power",
+      "breakpoints": true
     }
   ]
 }

@@ -29,8 +29,8 @@ export async function handlerReset(_: Request, res: Response) {
 
   config.api.fileserverHits = 0;
   await resetUsers();
-  //respondWithJSON(res, 200, result)
-  res.write("Hits reset to 0");
+  respondWithJSON(res, 200, "Hits reset to 0")
+  //res.write("Hits reset to 0");
 }
 
 export function handlerRerouteHome(_: Request, res: Response){
