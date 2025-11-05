@@ -4,7 +4,7 @@ import { handlerMetrics, handlerReadiness, handlerRerouteHome, handlerReset } fr
 import { middlewareLogResponse, middlewareMetricsInc, middlewareErrorHandler } from "./api/middleware.js";
 import { handlerChirpsCreate, handlerGetAllChirps, handlerGetChirps } from "./api/chirps.js";
 import { hanlderUsersCreate } from "./api/usersCreate.js"
-import { hanlderUsersLogin } from "./api/auth.js";
+import { hanlderUsersLogin } from "./api/authHandlers.js";
 
 const app = express();
 const PORT = 8080;

@@ -1,21 +1,25 @@
 import { respondWithJSON } from "./json.js";
 import type { Request, Response } from "express";
-import { BadRequestError, NotFoundError } from "./errorClasses.js"
+import { BadRequestError, NotFoundError, UnauthorizedError } from "./errorClasses.js"
 import { NewChirp } from "../db/schema.js";
 import { postChirp, getChirps } from "../db/queries/chirps.js";
+import { getBearerToken, validateJWT } from "../auth.js";
+import { config } from "../config.js";
 
 type Chirp = {
   body: string;
-  userId: string;
 }
 
 export async function handlerChirpsCreate(req: Request, res: Response) {
   const parsedBody: Chirp = req.body;
+  
+  const token = getBearerToken(req);
+  const userFromToken = validateJWT(token, config.api.jws);
   const validatedChirp = validateChirp(parsedBody.body);
 
   const newChirp: NewChirp = {
     body: validatedChirp,
-    userId: parsedBody.userId
+    userId: userFromToken
   }
 
   const result = await postChirp(newChirp);

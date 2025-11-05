@@ -1,6 +1,7 @@
 import argon2 from "argon2";
 import jwt, { JwtPayload } from "jsonwebtoken";
-import { UnauthorizedError } from "./api/errorClasses";
+import { UnauthorizedError } from "./api/errorClasses.js";
+import { Request } from "express";
 
 const TOKEN_ISSUER = "chirpy";
 
@@ -14,7 +15,7 @@ export async function checkPasswordHash(password: string, hash: string): Promise
 
 type Payload = Pick<JwtPayload, "iss" | "sub" | "iat" | "exp">;
 
-export function makeJWT(userID: string, expiresIn: number, secret: string){
+export function makeJWT(userID: string, expiresIn: number, secret: string): string {
   
   const currentTimeInSeconds = Math.floor(Date.now() / 1000);
   const payload:Payload = {
@@ -26,7 +27,7 @@ export function makeJWT(userID: string, expiresIn: number, secret: string){
   return jwt.sign(payload, secret, { algorithm: "HS256" } );
 }
 
-export function validateJWT(tokenString: string, secret: string){
+export function validateJWT(tokenString: string, secret: string): string {
   let decoded: Payload
   try {
     decoded = jwt.verify(tokenString, secret) as JwtPayload; 
@@ -43,4 +44,16 @@ export function validateJWT(tokenString: string, secret: string){
   }
 
   return decoded.sub;
+}
+
+export function getBearerToken(req: Request): string {
+  const authHeader = req.get("Authorization");
+  if (!authHeader){
+    throw new UnauthorizedError("No auth header");
+  }
+  const [_, bearerToken] = authHeader.split(" ");
+  if(!bearerToken) {
+    throw new UnauthorizedError("No auth header");
+  }
+  return bearerToken;
 }
