@@ -1,7 +1,8 @@
 import argon2 from "argon2";
 import jwt, { JwtPayload } from "jsonwebtoken";
-import { BadRequestError, UnauthorizedError } from "./api/errorClasses.js";
 import { Request } from "express";
+import { randomBytes } from "crypto";
+import { BadRequestError, UnauthorizedError } from "./api/errorClasses.js";
 
 const TOKEN_ISSUER = "chirpy";
 
@@ -56,4 +57,8 @@ export function getBearerToken(req: Request): string {
     throw new BadRequestError("Malformed authorization header");
   }
   return bearerToken;
+}
+
+export function makeRefreshToken(): string{
+  return randomBytes(32).toString("hex");
 }

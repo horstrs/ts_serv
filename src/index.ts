@@ -4,7 +4,7 @@ import { handlerMetrics, handlerReadiness, handlerRerouteHome, handlerReset } fr
 import { middlewareLogResponse, middlewareMetricsInc, middlewareErrorHandler } from "./api/middleware.js";
 import { handlerChirpsCreate, handlerGetAllChirps, handlerGetChirps } from "./api/chirps.js";
 import { hanlderUsersCreate } from "./api/usersCreate.js"
-import { hanlderUsersLogin } from "./api/authHandlers.js";
+import { hanlderUsersLogin, hanlderRefreshAccess, hanlderRevokeAccess } from "./api/authHandlers.js";
 
 const app = express();
 const PORT = 8080;
@@ -47,6 +47,14 @@ app.post("/api/users", (req, res, next) => {
 
 app.post("/api/login", (req, res, next) => {
   Promise.resolve(hanlderUsersLogin(req, res)).catch(next);
+});
+
+app.post("/api/refresh", (req, res, next) => {
+  Promise.resolve(hanlderRefreshAccess(req, res)).catch(next);
+});
+
+app.post("/api/revoke", (req, res, next) => {
+  Promise.resolve(hanlderRevokeAccess(req, res)).catch(next);
 });
 
 app.use(middlewareErrorHandler);

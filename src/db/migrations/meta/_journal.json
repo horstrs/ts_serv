@@ -50,6 +50,13 @@
       "when": 1762344593280,
       "tag": "0006_puzzling_korg",
       "breakpoints": true
+    },
+    {
+      "idx": 7,
+      "version": "7",
+      "when": 1762375585768,
+      "tag": "0007_neat_calypso",
+      "breakpoints": true
     }
   ]
 }
