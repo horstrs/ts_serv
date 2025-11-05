@@ -64,20 +64,15 @@ export async function hanlderUsersLogin(req: Request, res: Response) {
 
 export async function hanlderRefreshAccess(req: Request, res: Response) {
   const refreshToken = getBearerToken(req);
-  
   const dbToken = await getRefreshToken(refreshToken);
-  //const now = new Date().toUTCString();
-
   if (new Date() > dbToken.expiresAt) {
     throw new UnauthorizedError("Refresh token expired");
   }
-
   if (dbToken.revokedAt && new Date() > dbToken.revokedAt) {
     throw new UnauthorizedError("Refresh token revoked");
   }
   const jwt = makeJWT(dbToken.userId, MAX_TIME_IN_SECONDS, config.jwt.secret);
   respondWithJSON(res, 200, {token: jwt});
-  
 }
 
 export async function hanlderRevokeAccess(req: Request, res: Response) {
