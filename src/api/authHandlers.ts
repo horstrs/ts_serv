@@ -1,6 +1,6 @@
 import { respondWithError, respondWithJSON } from "./json.js";
 import { getUser } from "../db/queries/users.js";
-import { NewUser } from "../db/schema.js";
+import { UserPreview } from "./usersCreate.js";
 import type { Request, Response } from "express";
 import { BadRequestError } from "./errorClasses.js";
 import { checkPasswordHash, makeJWT } from "../auth.js"
@@ -12,7 +12,9 @@ type UserReq = {
   expiresInSeconds?: number;
 }
 
-type UserPreview = Omit<NewUser, "hashedPassword">;
+type LoginResponse = UserPreview & {
+  token: string;
+};
 
 const MAX_TIME_IN_SECONDS = 3600;
 
@@ -38,7 +40,7 @@ export async function hanlderUsersLogin(req: Request, res: Response) {
     expiresIn = Math.min(MAX_TIME_IN_SECONDS, parsedBody.expiresInSeconds)
   }
   
-  const token = makeJWT(user.id, expiresIn, config.api.jws)
+  const token = makeJWT(user.id, expiresIn, config.jwt.secret);
 
   const result = {
     id: user.id,
@@ -46,7 +48,7 @@ export async function hanlderUsersLogin(req: Request, res: Response) {
     updatedAt: user.updatedAt,
     email: user.email,
     token: token
-  }
+  } satisfies LoginResponse;
 
   respondWithJSON(res, 200, result);
 }

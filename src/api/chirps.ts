@@ -14,7 +14,7 @@ export async function handlerChirpsCreate(req: Request, res: Response) {
   const parsedBody: Chirp = req.body;
   
   const token = getBearerToken(req);
-  const userFromToken = validateJWT(token, config.api.jws);
+  const userFromToken = validateJWT(token, config.jwt.secret);
   const validatedChirp = validateChirp(parsedBody.body);
 
   const newChirp: NewChirp = {

@@ -10,7 +10,7 @@ type UserReq = {
   email: string;
 }
 
-type UserPreview = Omit<NewUser, "hashedPassword">;
+export type UserPreview = Omit<NewUser, "hashedPassword">;
 
 export async function hanlderUsersCreate(req: Request, res: Response) {
   const parsedBody:UserReq = req.body;
