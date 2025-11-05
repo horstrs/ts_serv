@@ -1,6 +1,6 @@
 import { respondWithError, respondWithJSON } from "./json.js";
-import { createUser, getUser } from "../db/queries/users.js";
-import { NewUser, users } from "../db/schema.js";
+import { getUser } from "../db/queries/users.js";
+import { NewUser } from "../db/schema.js";
 import type { Request, Response} from "express";
 import { BadRequestError } from "./errorClasses.js";
 import { checkPasswordHash, hashPassword } from "../auth.js"
