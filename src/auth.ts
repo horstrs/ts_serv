@@ -53,7 +53,7 @@ export function getBearerToken(req: Request): string {
   }
   const [_, bearerToken] = authHeader.split(" ");
   if(!bearerToken) {
-    throw new UnauthorizedError("No auth header");
+    throw new BadRequestError("Malformed authorization header");
   }
   return bearerToken;
 }
