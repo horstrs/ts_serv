@@ -1,9 +1,10 @@
 import express from "express";
 
 import { handlerMetrics, handlerReadiness, handlerRerouteHome, handlerReset } from "./api/handlers.js";
-import { hanlderUsersCreate } from "./api/createUser.js"
 import { middlewareLogResponse, middlewareMetricsInc, middlewareErrorHandler } from "./api/middleware.js";
 import { handlerChirpsCreate, handlerGetAllChirps, handlerGetChirps } from "./api/chirps.js";
+import { hanlderUsersCreate } from "./api/usersCreate.js"
+import { hanlderUsersLogin } from "./api/usersLogin.js";
 
 const app = express();
 const PORT = 8080;
@@ -42,6 +43,10 @@ app.post("/api/chirps", (req, res, next) => {
 
 app.post("/api/users", (req, res, next) => {
   Promise.resolve(hanlderUsersCreate(req, res)).catch(next);
+});
+
+app.post("/api/login", (req, res, next) => {
+  Promise.resolve(hanlderUsersLogin(req, res)).catch(next);
 });
 
 app.use(middlewareErrorHandler);

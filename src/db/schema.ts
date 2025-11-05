@@ -8,6 +8,7 @@ export const users = pgTable("users", {
     .defaultNow()
     .$onUpdate(() => new Date()),
   email: varchar("email", { length: 256 }).unique().notNull(),
+  hashed_password: varchar("hashed_password", { length: 256 }).notNull().default("unset")
 });
 
 export type NewUser = typeof users.$inferInsert;
@@ -16,11 +17,10 @@ export const chirps = pgTable("chirps", {
   id: uuid("id").primaryKey().defaultRandom(),
   createdAt: timestamp("created_at").notNull().defaultNow(),
   updatedAt: timestamp("updated_at").notNull().defaultNow().$onUpdate(() => new Date()),
-  body: varchar("body", { length: 140 }).notNull(),
+  body: varchar("body", { length: 256 }).notNull(),
   userId: uuid("userId")
     .references(() => users.id, { onDelete: "cascade" })
     .notNull(),
 });
 
 export type NewChirp = typeof chirps.$inferInsert;
-

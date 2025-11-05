@@ -36,6 +36,20 @@
       "when": 1762278589553,
       "tag": "0004_overrated_jack_power",
       "breakpoints": true
+    },
+    {
+      "idx": 5,
+      "version": "7",
+      "when": 1762295357164,
+      "tag": "0005_bright_valkyrie",
+      "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "7",
+      "when": 1762344593280,
+      "tag": "0006_puzzling_korg",
+      "breakpoints": true
     }
   ]
 }
