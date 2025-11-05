@@ -10,12 +10,7 @@ type UserReq = {
   email: string;
 }
 
-type NewUserPreview = {
-  id: string;
-  createdAt: Date;
-  updatedAt: Date;
-  email: string;
-}
+type UserPreview = Omit<NewUser, "hashedPassword">;
 
 export async function hanlderUsersCreate(req: Request, res: Response) {
   const parsedBody:UserReq = req.body;
@@ -26,15 +21,16 @@ export async function hanlderUsersCreate(req: Request, res: Response) {
   const hashedPassword = await hashPassword(parsedBody.password);
   const newUser:NewUser = {email: parsedBody.email, hashed_password: hashedPassword};
   
-  const result = await createUser(newUser);
-  if (!result) {
+  const user = await createUser(newUser);
+  if (!user) {
     throw new Error("Could not create user");
   }
-  const userPreview:NewUserPreview = { 
-    id: result.id,
-    createdAt: result.createdAt,
-    updatedAt: result.updatedAt,
-    email: result.email,
-  }
-  respondWithJSON(res, 201, userPreview);
+
+  respondWithJSON(res, 201, { 
+    id: user.id,
+    email: user.email,
+    createdAt: user.createdAt,
+    updatedAt: user.updatedAt,
+  } satisfies UserPreview);
+
 }

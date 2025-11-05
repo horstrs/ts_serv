@@ -10,12 +10,7 @@ type UserReq = {
   email: string;
 }
 
-type NewUserPreview = {
-  id: string;
-  createdAt: Date;
-  updatedAt: Date;
-  email: string;
-}
+type UserPreview = Omit<NewUser, "hashedPassword">;
 
 export async function hanlderUsersLogin(req: Request, res: Response) {
   const parsedBody:UserReq = req.body;
@@ -34,11 +29,10 @@ export async function hanlderUsersLogin(req: Request, res: Response) {
     return;
   }
 
-  const userPreview:NewUserPreview = { 
+  respondWithJSON(res, 200, {
     id: user.id,
+    email: user.email,
     createdAt: user.createdAt,
     updatedAt: user.updatedAt,
-    email: user.email,
-  }
-  respondWithJSON(res, 200, userPreview);
+  } satisfies UserPreview);
 }
