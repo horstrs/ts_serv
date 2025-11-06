@@ -69,6 +69,12 @@ export async function handlerGetAllChirps(req: Request, res: Response) {
       respondWithError(res, 500, "Couldn't retrieve chirps")
     }
   }
+  const sortQuery = req.query.sort;
+  if (typeof sortQuery === "string" && sortQuery === "desc") {
+    result.sort((a,b) => b.createdAt.getTime() - a.createdAt.getTime())
+  } else {
+    result.sort((a,b) => a.createdAt.getTime() - b.createdAt.getTime())
+  }
 
   respondWithJSON(res, 200, result);
 }
