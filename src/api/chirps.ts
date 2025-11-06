@@ -1,8 +1,8 @@
-import { respondWithJSON } from "./json.js";
+import { respondWithError, respondWithJSON } from "./json.js";
 import type { Request, Response } from "express";
-import { BadRequestError, ForbiddenError, NotFoundError, UnauthorizedError } from "./errorClasses.js"
+import { BadRequestError, ForbiddenError, NotFoundError } from "./errorClasses.js"
 import { NewChirp } from "../db/schema.js";
-import { postChirp, getChirps, getChirpById, deleteChirps } from "../db/queries/chirps.js";
+import { postChirp, getChirps, getChirpById, deleteChirps, getChirpsByAuthor } from "../db/queries/chirps.js";
 import { getBearerToken, validateJWT } from "../auth.js";
 import { config } from "../config.js";
 
@@ -53,15 +53,30 @@ function cleanMessages(message: string): string {
   return cleanedMessage
 }
 
-export async function handlerGetAllChirps(_: Request, res: Response) {
-  const result = await getChirps();
+export async function handlerGetAllChirps(req: Request, res: Response) {
+  let authorId = "";
+  let result = [];
+  const authorIdQuery = req.query.authorId;
+  if (typeof authorIdQuery === "string") {
+    authorId = authorIdQuery;
+    result = await getChirpsByAuthor(authorId);
+    if (!result) {
+      respondWithError(res, 404, `No chirps found for author ${authorId}`)
+    }
+  } else {
+    result = await getChirps();
+    if (!result) {
+      respondWithError(res, 500, "Couldn't retrieve chirps")
+    }
+  }
+
   respondWithJSON(res, 200, result);
 }
 
 export async function handlerGetChirpById(req: Request, res: Response) {
   const chirpId = req.params.chirpID;
   const result = await getChirpById(chirpId);
-  if (!result){
+  if (!result) {
     throw new NotFoundError(`Chirp with chirpId: ${chirpId} not found`)
   }
   respondWithJSON(res, 200, result);
@@ -83,7 +98,7 @@ export async function hanlderChirpsDelete(req: Request, res: Response) {
   }
   await deleteChirps(chirpId, userFromToken);
   const result = await getChirpById(chirpId);
-  if(result) {
+  if (result) {
     throw new Error(`Could note delete: ${chirpId}`)
   }
   res.status(204).send();
