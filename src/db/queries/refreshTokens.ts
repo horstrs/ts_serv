@@ -24,6 +24,7 @@ export async function revokeRefreshToken(tokenToRevoke: string) {
     .update(refreshTokens)
     .set( {revokedAt: sql`NOW()` })
     .where(eq(refreshTokens.token, tokenToRevoke))
+    .returning();
 
   return revokedToken;
 }

@@ -3,7 +3,7 @@ import express from "express";
 import { handlerMetrics, handlerReadiness, handlerRerouteHome, handlerReset } from "./api/handlers.js";
 import { middlewareLogResponse, middlewareMetricsInc, middlewareErrorHandler } from "./api/middleware.js";
 import { handlerChirpsCreate, handlerGetAllChirps, handlerGetChirps } from "./api/chirps.js";
-import { hanlderUsersCreate } from "./api/usersCreate.js"
+import { hanlderUsersCreate, hanlderUsersUpdate } from "./api/usersCreate.js"
 import { hanlderUsersLogin, hanlderRefreshAccess, hanlderRevokeAccess } from "./api/authHandlers.js";
 
 const app = express();
@@ -55,6 +55,10 @@ app.post("/api/refresh", (req, res, next) => {
 
 app.post("/api/revoke", (req, res, next) => {
   Promise.resolve(hanlderRevokeAccess(req, res)).catch(next);
+});
+
+app.put("/api/users", (req, res, next) => {
+  Promise.resolve(hanlderUsersUpdate(req, res)).catch(next);
 });
 
 app.use(middlewareErrorHandler);

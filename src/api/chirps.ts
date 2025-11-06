@@ -12,9 +12,7 @@ type Chirp = {
 
 export async function handlerChirpsCreate(req: Request, res: Response) {
   const parsedBody: Chirp = req.body;
-  
   const token = getBearerToken(req);
-  //console.log(token)
   const userFromToken = validateJWT(token, config.jwt.secret);
   const validatedChirp = validateChirp(parsedBody.body);
 

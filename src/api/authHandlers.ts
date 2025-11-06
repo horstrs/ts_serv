@@ -1,5 +1,5 @@
 import { respondWithError, respondWithJSON } from "./json.js";
-import { getUser } from "../db/queries/users.js";
+import { getUserByEmail } from "../db/queries/users.js";
 import { createRefreshToken, getRefreshToken, revokeRefreshToken } from "../db/queries/refreshTokens.js";
 import { UserPreview } from "./usersCreate.js";
 import { BadRequestError, UnauthorizedError } from "./errorClasses.js";
@@ -26,7 +26,7 @@ export async function hanlderUsersLogin(req: Request, res: Response) {
     throw new BadRequestError("Missing required fields");
   }
 
-  const user = await getUser(parsedBody.email);
+  const user = await getUserByEmail(parsedBody.email);
   if (!user) {
     respondWithError(res, 401, "Incorrect email or password");
     return;
@@ -63,16 +63,21 @@ export async function hanlderUsersLogin(req: Request, res: Response) {
 }
 
 export async function hanlderRefreshAccess(req: Request, res: Response) {
-  const refreshToken = getBearerToken(req);
-  const dbToken = await getRefreshToken(refreshToken);
-  if (new Date() > dbToken.expiresAt) {
-    throw new UnauthorizedError("Refresh token expired");
+  try{
+    const refreshToken = getBearerToken(req);
+  
+    const dbToken = await getRefreshToken(refreshToken);
+    if (new Date() > dbToken.expiresAt) {
+      throw new UnauthorizedError("");
+    }
+    if (dbToken.revokedAt && new Date() > dbToken.revokedAt) {
+      throw new UnauthorizedError("");
+    }
+    const jwt = makeJWT(dbToken.userId, MAX_TIME_IN_SECONDS, config.jwt.secret);
+    respondWithJSON(res, 200, {token: jwt});
+  } catch (err){
+    throw new UnauthorizedError("User not authorized")
   }
-  if (dbToken.revokedAt && new Date() > dbToken.revokedAt) {
-    throw new UnauthorizedError("Refresh token revoked");
-  }
-  const jwt = makeJWT(dbToken.userId, MAX_TIME_IN_SECONDS, config.jwt.secret);
-  respondWithJSON(res, 200, {token: jwt});
 }
 
 export async function hanlderRevokeAccess(req: Request, res: Response) {
