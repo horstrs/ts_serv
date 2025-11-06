@@ -52,13 +52,25 @@ export function getBearerToken(req: Request): string {
   if (!authHeader){
     throw new UnauthorizedError("Malformed authorization header");
   }
-  const [_, bearerToken] = authHeader.split(" ");
-  if(!bearerToken) {
-    throw new BadRequestError("Malformed authorization header");
-  }
-  return bearerToken;
+  return extractToken(authHeader);
 }
 
 export function makeRefreshToken(): string{
   return randomBytes(32).toString("hex");
+}
+
+export function getAPIKey(req: Request): string {
+  const authHeader = req.get("Authorization");
+  if (!authHeader){
+    throw new UnauthorizedError("Malformed authorization header");
+  }
+  return extractToken(authHeader);
+}
+
+function extractToken(authHeader: string): string {
+  const [_, token] = authHeader.split(" ");
+  if(!token) {
+    throw new BadRequestError("Malformed authorization header");
+  }
+  return token;
 }
