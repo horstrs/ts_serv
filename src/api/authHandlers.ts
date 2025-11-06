@@ -57,6 +57,7 @@ export async function hanlderUsersLogin(req: Request, res: Response) {
     email: user.email,
     token: jwt,
     refreshToken: refreshToken,
+    isChirpyRed: user.isChirpyRed
   } satisfies LoginResponse;
 
   respondWithJSON(res, 200, result);

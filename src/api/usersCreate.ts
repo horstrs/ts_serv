@@ -33,6 +33,7 @@ export async function hanlderUsersCreate(req: Request, res: Response) {
     email: user.email,
     createdAt: user.createdAt,
     updatedAt: user.updatedAt,
+    isChirpyRed: user.isChirpyRed,
   } satisfies UserPreview);
 
 }
@@ -59,5 +60,6 @@ export async function hanlderUsersUpdate(req: Request, res: Response) {
     email: updatedUser.email,
     createdAt: updatedUser.createdAt,
     updatedAt: updatedUser.updatedAt,
+    isChirpyRed: updatedUser.isChirpyRed,
   } satisfies UserPreview);
 }

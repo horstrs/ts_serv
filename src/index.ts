@@ -2,9 +2,10 @@ import express from "express";
 
 import { handlerMetrics, handlerReadiness, handlerRerouteHome, handlerReset } from "./api/handlers.js";
 import { middlewareLogResponse, middlewareMetricsInc, middlewareErrorHandler } from "./api/middleware.js";
-import { handlerChirpsCreate, handlerGetAllChirps, handlerGetChirps } from "./api/chirps.js";
+import { handlerChirpsCreate, handlerGetAllChirps, handlerGetChirpById, hanlderChirpsDelete } from "./api/chirps.js";
 import { hanlderUsersCreate, hanlderUsersUpdate } from "./api/usersCreate.js"
 import { hanlderUsersLogin, hanlderRefreshAccess, hanlderRevokeAccess } from "./api/authHandlers.js";
+import { hanlderPolkaWebhooks } from "./api/webhooks.js";
 
 const app = express();
 const PORT = 8080;
@@ -22,7 +23,7 @@ app.get("/api/chirps", (req, res, next) => {
 });
 
 app.get("/api/chirps/:chirpID", (req, res, next) => {
-  Promise.resolve(handlerGetChirps(req, res)).catch(next);
+  Promise.resolve(handlerGetChirpById(req, res)).catch(next);
 });
 
 app.get("/admin/metrics", (req, res, next) => {
@@ -57,8 +58,16 @@ app.post("/api/revoke", (req, res, next) => {
   Promise.resolve(hanlderRevokeAccess(req, res)).catch(next);
 });
 
+app.post("/api/polka/webhooks", (req, res, next) => {
+  Promise.resolve(hanlderPolkaWebhooks(req, res)).catch(next);
+});
+
 app.put("/api/users", (req, res, next) => {
   Promise.resolve(hanlderUsersUpdate(req, res)).catch(next);
+});
+
+app.delete("/api/chirps/:chirpID", (req, res, next) => {
+  Promise.resolve(hanlderChirpsDelete(req, res)).catch(next);
 });
 
 app.use(middlewareErrorHandler);

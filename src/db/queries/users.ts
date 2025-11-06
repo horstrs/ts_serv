@@ -42,3 +42,14 @@ export async function updateUser(userId: string, email: string, hashedPass: stri
     .returning();
   return result;
 }
+
+export async function updateUserRedStatus(userId: string, redStatus: boolean){
+  const [result] = await db
+    .update(users)
+    .set({
+      isChirpyRed: redStatus,
+    })
+    .where(eq(users.id, userId))
+    .returning();
+  return result;
+}
